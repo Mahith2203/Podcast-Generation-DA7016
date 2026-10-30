@@ -1,0 +1,16 @@
+{
+  "name": "podcast-studio-3d-hosts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Source of the two 3D hosts (three.js). `npm run build` writes ../static/stage3d.js, which the app loads.",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild src/stage3d.js --bundle --minify --format=iife --global-name=Stage3D --target=es2019 --outfile=../static/stage3d.js"
+  },
+  "dependencies": {
+    "three": "0.170.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.24.0"
+  }
+}

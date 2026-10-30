@@ -1,0 +1,43 @@
+# Runs on every push and pull request: lint, then the test-suite on three Python versions.
+# The video tests (tests/test_video.py) render real frames in Chromium and take several minutes,
+# so they are left for a local run: `pytest tests/test_video.py`.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install ruff
+      - run: ruff check .
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements*.txt
+      - name: Install ffmpeg (audio export and loudness tests)
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Run tests (everything except the slow video-rendering tests)
+        run: pytest --ignore=tests/test_video.py

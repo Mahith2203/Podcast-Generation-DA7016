@@ -1,0 +1,30 @@
+[project]
+name = "podcast-studio"
+version = "1.0.0"
+description = "Turn an NCERT textbook chapter into a fact-checked, two-host podcast (and a narrated video) in English, Hindi and 21 other Indian languages."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[tool.setuptools]
+packages = { find = { include = ["podcast_studio*"] } }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 130
+target-version = "py311"
+extend-exclude = ["web3d"]
+
+[tool.ruff.lint]
+# E/W: pycodestyle, F: pyflakes (unused imports and names), I: import order, B: likely bugs, UP: modern syntax
+select = ["E", "W", "F", "I", "B", "UP"]
+ignore = ["E501", "E701", "E702", "E731", "B008", "B905", "B007", "UP037", "UP045", "UP035", "UP031"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011", "E402"]

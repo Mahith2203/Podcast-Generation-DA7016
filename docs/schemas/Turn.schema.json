@@ -1,0 +1,62 @@
+{
+  "description": "One spoken line: who speaks, the text, an optional English master (translate mode), a delivery style and whether\nit is a short reaction.",
+  "properties": {
+    "speaker": {
+      "enum": [
+        "A",
+        "B"
+      ],
+      "title": "Speaker",
+      "type": "string"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    },
+    "text_en": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Text En"
+    },
+    "style": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Style"
+    },
+    "reaction": {
+      "default": false,
+      "title": "Reaction",
+      "type": "boolean"
+    },
+    "take": {
+      "default": 0,
+      "title": "Take",
+      "type": "integer"
+    },
+    "edited": {
+      "default": false,
+      "title": "Edited",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "speaker",
+    "text"
+  ],
+  "title": "Turn",
+  "type": "object"
+}

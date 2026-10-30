@@ -1,0 +1,152 @@
+{
+  "$defs": {
+    "HostCfg": {
+      "description": "One host: display name, voice and the grammatical gender implied by the voice.",
+      "properties": {
+        "name": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "voice": {
+          "title": "Voice",
+          "type": "string"
+        },
+        "gender": {
+          "default": "female",
+          "enum": [
+            "female",
+            "male"
+          ],
+          "title": "Gender",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "voice"
+      ],
+      "title": "HostCfg",
+      "type": "object"
+    }
+  },
+  "description": "Everything chosen when an episode is created: language, writing mode, length, hosts, fact-check on or off,\ndelivery styles, and optional instructions. Out-of-range values are clamped.",
+  "properties": {
+    "language": {
+      "default": "en",
+      "title": "Language",
+      "type": "string"
+    },
+    "writing_mode": {
+      "default": "direct",
+      "enum": [
+        "direct",
+        "translate"
+      ],
+      "title": "Writing Mode",
+      "type": "string"
+    },
+    "polish_translation": {
+      "default": false,
+      "title": "Polish Translation",
+      "type": "boolean"
+    },
+    "audience": {
+      "default": "school students (Classes 6-12)",
+      "title": "Audience",
+      "type": "string"
+    },
+    "minutes": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Minutes"
+    },
+    "show_name": {
+      "default": "Chapter Chat",
+      "title": "Show Name",
+      "type": "string"
+    },
+    "host_a": {
+      "$ref": "#/$defs/HostCfg"
+    },
+    "host_b": {
+      "$ref": "#/$defs/HostCfg"
+    },
+    "fact_check": {
+      "default": true,
+      "title": "Fact Check",
+      "type": "boolean"
+    },
+    "max_revisions": {
+      "default": 2,
+      "title": "Max Revisions",
+      "type": "integer"
+    },
+    "allowed_styles": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Styles",
+      "type": "array"
+    },
+    "jingle": {
+      "default": true,
+      "title": "Jingle",
+      "type": "boolean"
+    },
+    "auto_voice": {
+      "default": true,
+      "title": "Auto Voice",
+      "type": "boolean"
+    },
+    "make_video": {
+      "default": false,
+      "title": "Make Video",
+      "type": "boolean"
+    },
+    "extra_instructions": {
+      "default": "",
+      "title": "Extra Instructions",
+      "type": "string"
+    },
+    "writer_model": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Writer Model"
+    },
+    "checker_model": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Checker Model"
+    },
+    "tts_max_words": {
+      "default": 40,
+      "title": "Tts Max Words",
+      "type": "integer"
+    }
+  },
+  "title": "ProjectSettings",
+  "type": "object"
+}

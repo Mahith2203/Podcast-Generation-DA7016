@@ -1,0 +1,152 @@
+{
+  "$defs": {
+    "Scene": {
+      "description": "One slide of the video: a layout, its text, which script lines it is on screen for, and when each item appears.",
+      "properties": {
+        "layout": {
+          "default": "bullets",
+          "enum": [
+            "title",
+            "bullets",
+            "steps",
+            "cycle",
+            "definition",
+            "compare",
+            "figure",
+            "keyfact",
+            "recap"
+          ],
+          "title": "Layout",
+          "type": "string"
+        },
+        "title": {
+          "default": "",
+          "title": "Title",
+          "type": "string"
+        },
+        "items": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "term": {
+          "default": "",
+          "title": "Term",
+          "type": "string"
+        },
+        "text": {
+          "default": "",
+          "title": "Text",
+          "type": "string"
+        },
+        "columns": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Columns",
+          "type": "array"
+        },
+        "rows": {
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Rows",
+          "type": "array"
+        },
+        "figure": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Figure"
+        },
+        "from_turn": {
+          "default": 0,
+          "title": "From Turn",
+          "type": "integer"
+        },
+        "to_turn": {
+          "default": 0,
+          "title": "To Turn",
+          "type": "integer"
+        },
+        "reveal": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Reveal",
+          "type": "array"
+        }
+      },
+      "title": "Scene",
+      "type": "object"
+    }
+  },
+  "description": "The slides planned for one segment, and any problems the checks found in them.",
+  "properties": {
+    "index": {
+      "title": "Index",
+      "type": "integer"
+    },
+    "version": {
+      "title": "Version",
+      "type": "integer"
+    },
+    "scenes": {
+      "items": {
+        "$ref": "#/$defs/Scene"
+      },
+      "title": "Scenes",
+      "type": "array"
+    },
+    "source": {
+      "default": "llm",
+      "enum": [
+        "llm",
+        "fallback",
+        "mock"
+      ],
+      "title": "Source",
+      "type": "string"
+    },
+    "instruction": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Instruction"
+    },
+    "issues": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "index",
+    "version"
+  ],
+  "title": "SegmentStoryboard",
+  "type": "object"
+}

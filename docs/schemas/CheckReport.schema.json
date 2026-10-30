@@ -1,0 +1,112 @@
+{
+  "$defs": {
+    "Issue": {
+      "description": "One problem found by a check, with its severity, the line it concerns and a suggested fix.",
+      "properties": {
+        "turn": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Turn"
+        },
+        "severity": {
+          "default": "minor",
+          "enum": [
+            "major",
+            "minor"
+          ],
+          "title": "Severity",
+          "type": "string"
+        },
+        "type": {
+          "default": "other",
+          "title": "Type",
+          "type": "string"
+        },
+        "detail": {
+          "default": "",
+          "title": "Detail",
+          "type": "string"
+        },
+        "evidence_unit": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Unit"
+        },
+        "suggested_fix": {
+          "default": "",
+          "title": "Suggested Fix",
+          "type": "string"
+        },
+        "source": {
+          "default": "llm",
+          "enum": [
+            "llm",
+            "rule"
+          ],
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "title": "Issue",
+      "type": "object"
+    }
+  },
+  "description": "Result of checking one segment: verdict, issues, missing key points and whether it still needs a human look after\nthe repair attempts.",
+  "properties": {
+    "verdict": {
+      "default": "unchecked",
+      "enum": [
+        "pass",
+        "revise",
+        "unchecked"
+      ],
+      "title": "Verdict",
+      "type": "string"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/Issue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "missing_points": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Missing Points",
+      "type": "array"
+    },
+    "notes": {
+      "default": "",
+      "title": "Notes",
+      "type": "string"
+    },
+    "attempts": {
+      "default": 1,
+      "title": "Attempts",
+      "type": "integer"
+    },
+    "needs_review": {
+      "default": false,
+      "title": "Needs Review",
+      "type": "boolean"
+    }
+  },
+  "title": "CheckReport",
+  "type": "object"
+}

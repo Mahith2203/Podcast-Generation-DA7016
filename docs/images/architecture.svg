@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 740" width="1500" height="740" font-family="'Segoe UI','Noto Sans',Arial,sans-serif">
+<defs>
+<marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#5b6785"/></marker>
+<marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0f766e"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="30" y="30" width="980" height="150" rx="14" fill="#f4f6fb" stroke="#c5cde0"/>
+<text x="990" y="58" text-anchor="end" font-size="16" font-weight="700" fill="#14213d">1 · Read the chapter</text>
+<rect x="60" y="80" width="190" height="80" rx="10" fill="#eef2fb" stroke="#14213d" stroke-width="1.6"/>
+<text x="155.0" y="115.0" text-anchor="middle" font-size="15" font-weight="700" fill="#14213d">NCERT chapter</text>
+<text x="155.0" y="135.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">PDF or text</text>
+<rect x="300" y="80" width="300" height="80" rx="10" fill="#eef2fb" stroke="#14213d" stroke-width="1.6"/>
+<text x="450.0" y="115.0" text-anchor="middle" font-size="15" font-weight="700" fill="#14213d">Ingest</text>
+<text x="450.0" y="135.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">clean text, headings, OCR fallback</text>
+<rect x="650" y="80" width="330" height="80" rx="10" fill="#eef2fb" stroke="#14213d" stroke-width="1.6"/>
+<text x="815.0" y="115.0" text-anchor="middle" font-size="15" font-weight="700" fill="#14213d">Numbered source paragraphs</text>
+<text x="815.0" y="135.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">everything later points back here</text>
+<path d="M250,120 H300" fill="none" stroke="#5b6785" stroke-width="2"  marker-end="url(#a)"/>
+<path d="M600,120 H650" fill="none" stroke="#5b6785" stroke-width="2"  marker-end="url(#a)"/>
+<rect x="30" y="210" width="980" height="200" rx="14" fill="#f4f6fb" stroke="#c5cde0"/>
+<text x="990" y="238" text-anchor="end" font-size="16" font-weight="700" fill="#14213d">2 · Write a faithful script</text>
+<rect x="50" y="270" width="190" height="90" rx="10" fill="#eef2fb" stroke="#14213d" stroke-width="1.6"/>
+<text x="145.0" y="300.0" text-anchor="middle" font-size="15" font-weight="700" fill="#14213d">Planner</text>
+<text x="145.0" y="320.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">outline, key points,</text>
+<text x="145.0" y="340.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">each tied to paragraphs</text>
+<rect x="290" y="270" width="190" height="90" rx="10" fill="#eef2fb" stroke="#14213d" stroke-width="1.6"/>
+<text x="385.0" y="300.0" text-anchor="middle" font-size="15" font-weight="700" fill="#14213d">Writer</text>
+<text x="385.0" y="320.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">two-host dialogue,</text>
+<text x="385.0" y="340.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">one segment at a time</text>
+<rect x="530" y="270" width="220" height="90" rx="10" fill="#fff4dc" stroke="#b45309" stroke-width="1.6"/>
+<text x="640.0" y="300.0" text-anchor="middle" font-size="15" font-weight="700" fill="#14213d">Checks + auto-repair</text>
+<text x="640.0" y="320.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">number rule + LLM fact-check</text>
+<text x="640.0" y="340.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">up to 2 repair rounds</text>
+<rect x="800" y="270" width="180" height="90" rx="10" fill="#eef2fb" stroke="#14213d" stroke-width="1.6"/>
+<text x="890.0" y="300.0" text-anchor="middle" font-size="15" font-weight="700" fill="#14213d">Segment script</text>
+<text x="890.0" y="320.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">passed, or flagged</text>
+<text x="890.0" y="340.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">&#x27;needs review&#x27;</text>
+<path d="M240,315 H290" fill="none" stroke="#5b6785" stroke-width="2"  marker-end="url(#a)"/>
+<path d="M480,315 H530" fill="none" stroke="#5b6785" stroke-width="2"  marker-end="url(#a)"/>
+<path d="M750,315 H800" fill="none" stroke="#5b6785" stroke-width="2"  marker-end="url(#a)"/>
+<path d="M815,160 V190 H145 V270" fill="none" stroke="#5b6785" stroke-width="2"  marker-end="url(#a)"/>
+<rect x="30" y="440" width="980" height="200" rx="14" fill="#f4f6fb" stroke="#c5cde0"/>
+<text x="990" y="468" text-anchor="end" font-size="16" font-weight="700" fill="#14213d">3 · Voice and mix</text>
+<rect x="50" y="500" width="190" height="90" rx="10" fill="#eef2fb" stroke="#14213d" stroke-width="1.6"/>
+<text x="145.0" y="530.0" text-anchor="middle" font-size="15" font-weight="700" fill="#14213d">Translate (optional)</text>
+<text x="145.0" y="550.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">English master →</text>
+<text x="145.0" y="570.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">Bodhan indic-translate</text>
+<rect x="290" y="500" width="190" height="90" rx="10" fill="#eef2fb" stroke="#14213d" stroke-width="1.6"/>
+<text x="385.0" y="530.0" text-anchor="middle" font-size="15" font-weight="700" fill="#14213d">Voice</text>
+<text x="385.0" y="550.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">Bodhan indic-speak,</text>
+<text x="385.0" y="570.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">short cached chunks</text>
+<rect x="530" y="500" width="220" height="90" rx="10" fill="#eef2fb" stroke="#14213d" stroke-width="1.6"/>
+<text x="640.0" y="530.0" text-anchor="middle" font-size="15" font-weight="700" fill="#14213d">Mix</text>
+<text x="640.0" y="550.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">pacing, overlaps, jingle,</text>
+<text x="640.0" y="570.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">loudness</text>
+<rect x="800" y="500" width="180" height="90" rx="10" fill="#eef2fb" stroke="#14213d" stroke-width="1.6"/>
+<text x="890.0" y="530.0" text-anchor="middle" font-size="15" font-weight="700" fill="#14213d">Episode</text>
+<text x="890.0" y="550.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">MP3 · WAV · transcript</text>
+<text x="890.0" y="570.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">SRT / VTT</text>
+<path d="M240,545 H290" fill="none" stroke="#5b6785" stroke-width="2"  marker-end="url(#a)"/>
+<path d="M480,545 H530" fill="none" stroke="#5b6785" stroke-width="2"  marker-end="url(#a)"/>
+<path d="M750,545 H800" fill="none" stroke="#5b6785" stroke-width="2"  marker-end="url(#a)"/>
+<path d="M890,360 V425 H145 V500" fill="none" stroke="#5b6785" stroke-width="2"  marker-end="url(#a)"/>
+<rect x="1050" y="30" width="420" height="610" rx="14" fill="#f4f6fb" stroke="#c5cde0"/>
+<text x="1450" y="58" text-anchor="end" font-size="16" font-weight="700" fill="#14213d">4 · Beyond the episode</text>
+<rect x="1080" y="80" width="360" height="110" rx="10" fill="#e3f5ef" stroke="#0f766e" stroke-width="1.6"/>
+<text x="1260.0" y="110.0" text-anchor="middle" font-size="15" font-weight="700" fill="#14213d">Study pack</text>
+<text x="1260.0" y="130.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">takeaways · glossary · quiz</text>
+<text x="1260.0" y="150.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">every item cites its paragraph</text>
+<text x="1260.0" y="170.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">and is verified by a second model</text>
+<rect x="1080" y="235" width="360" height="130" rx="10" fill="#e3f5ef" stroke="#0f766e" stroke-width="1.6"/>
+<text x="1260.0" y="275.0" text-anchor="middle" font-size="15" font-weight="700" fill="#14213d">Ask the hosts</text>
+<text x="1260.0" y="295.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">listener types a question</text>
+<text x="1260.0" y="315.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">retrieve paragraphs → answer → check → voice</text>
+<text x="1260.0" y="335.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">or an honest &#x27;not in this chapter&#x27;</text>
+<rect x="1080" y="410" width="360" height="80" rx="10" fill="#e3f5ef" stroke="#0f766e" stroke-width="1.6"/>
+<text x="1260.0" y="445.0" text-anchor="middle" font-size="15" font-weight="700" fill="#14213d">3D hosts</text>
+<text x="1260.0" y="465.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">perform the answer on stage</text>
+<rect x="1080" y="535" width="360" height="80" rx="10" fill="#e3f5ef" stroke="#0f766e" stroke-width="1.6"/>
+<text x="1260.0" y="570.0" text-anchor="middle" font-size="15" font-weight="700" fill="#14213d">Quality dashboard</text>
+<text x="1260.0" y="590.0" text-anchor="middle" font-size="13" font-weight="400" fill="#5b6785">+ printable evidence report</text>
+<path d="M980,120 H1030 V135 H1080" fill="none" stroke="#0f766e" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#g)"/>
+<path d="M1030,135 V300 H1080" fill="none" stroke="#0f766e" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#g)"/>
+<path d="M1260,365 V410" fill="none" stroke="#0f766e" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#g)"/>
+<path d="M980,545 H1030 V575 H1080" fill="none" stroke="#0f766e" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#g)"/>
+<text x="30" y="690" font-size="13" fill="#5b6785">Solid arrows: the generation pipeline.  Dashed green: extra features, which only read what the pipeline already produced (nothing is rewritten).</text>
+<text x="30" y="712" font-size="13" fill="#5b6785">Amber box: the safeguard that decides whether a script line may be spoken.  The same check is reused for answers in "Ask the hosts".</text>
+</svg>

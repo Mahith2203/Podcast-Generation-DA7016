@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Podcast Studio</title>
+<link rel="stylesheet" href="/static/app.css">
+<script>
+  /* decide before the first paint whether the sidebar is needed, so the welcome screen does not flash it */
+  try { var h = location.hash; if (h === '' || h === '#' || h === '#/' || h === '#/welcome') document.documentElement.dataset.boot = 'welcome'; } catch (e) { /* no hash support: harmless */ }
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+  <aside class="side" aria-label="Episodes">
+    <a class="brand" href="#/welcome" id="brand-home" aria-label="Podcast Studio, start screen">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">Podcast Studio</span>
+    </a>
+    <button class="btn primary wide" id="btn-new" type="button">New episode</button>
+    <button class="navlink" id="btn-home" type="button">Studio home</button>
+    <nav id="project-list" class="plist" aria-label="Your episodes"></nav>
+    <div class="side-foot">
+      <span id="mock-badge" class="badge mock" hidden>Demo mode</span>
+      <span class="foot-links">
+        <button class="link" id="btn-keys" type="button">Keys</button>
+        <button class="link" id="btn-tuning" type="button">Tuning</button>
+        <button class="link" id="btn-doctor" type="button">Check setup</button>
+      </span>
+    </div>
+  </aside>
+
+  <main id="main" class="main" tabindex="-1"></main>
+</div>
+
+<div id="player" class="player" hidden>
+  <div class="player-row">
+    <audio id="audio" controls preload="metadata"></audio>
+    <div class="player-meta">
+      <div id="player-chapter" class="player-chapter" aria-live="polite"></div>
+      <div class="speed" role="group" aria-label="Playback speed">
+        <button type="button" data-speed="0.85">0.85×</button>
+        <button type="button" data-speed="1" class="on">1×</button>
+        <button type="button" data-speed="1.25">1.25×</button>
+        <button type="button" data-speed="1.5">1.5×</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<dialog id="dlg" class="dlg"><div id="dlg-body"></div></dialog>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script src="/static/app.js"></script>
+</body>
+</html>

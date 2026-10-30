@@ -1,0 +1,267 @@
+{
+  "$defs": {
+    "CheckReport": {
+      "description": "Result of checking one segment: verdict, issues, missing key points and whether it still needs a human look after\nthe repair attempts.",
+      "properties": {
+        "verdict": {
+          "default": "unchecked",
+          "enum": [
+            "pass",
+            "revise",
+            "unchecked"
+          ],
+          "title": "Verdict",
+          "type": "string"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/Issue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "missing_points": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing Points",
+          "type": "array"
+        },
+        "notes": {
+          "default": "",
+          "title": "Notes",
+          "type": "string"
+        },
+        "attempts": {
+          "default": 1,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "needs_review": {
+          "default": false,
+          "title": "Needs Review",
+          "type": "boolean"
+        }
+      },
+      "title": "CheckReport",
+      "type": "object"
+    },
+    "Issue": {
+      "description": "One problem found by a check, with its severity, the line it concerns and a suggested fix.",
+      "properties": {
+        "turn": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Turn"
+        },
+        "severity": {
+          "default": "minor",
+          "enum": [
+            "major",
+            "minor"
+          ],
+          "title": "Severity",
+          "type": "string"
+        },
+        "type": {
+          "default": "other",
+          "title": "Type",
+          "type": "string"
+        },
+        "detail": {
+          "default": "",
+          "title": "Detail",
+          "type": "string"
+        },
+        "evidence_unit": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Unit"
+        },
+        "suggested_fix": {
+          "default": "",
+          "title": "Suggested Fix",
+          "type": "string"
+        },
+        "source": {
+          "default": "llm",
+          "enum": [
+            "llm",
+            "rule"
+          ],
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "title": "Issue",
+      "type": "object"
+    },
+    "Turn": {
+      "description": "One spoken line: who speaks, the text, an optional English master (translate mode), a delivery style and whether\nit is a short reaction.",
+      "properties": {
+        "speaker": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Speaker",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "text_en": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text En"
+        },
+        "style": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Style"
+        },
+        "reaction": {
+          "default": false,
+          "title": "Reaction",
+          "type": "boolean"
+        },
+        "take": {
+          "default": 0,
+          "title": "Take",
+          "type": "integer"
+        },
+        "edited": {
+          "default": false,
+          "title": "Edited",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "speaker",
+        "text"
+      ],
+      "title": "Turn",
+      "type": "object"
+    }
+  },
+  "description": "One saved version of a segment (generated, rewritten, edited or re-voiced) with its lines, check result and audio.",
+  "properties": {
+    "version": {
+      "title": "Version",
+      "type": "integer"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    },
+    "origin": {
+      "default": "generated",
+      "enum": [
+        "generated",
+        "rewrite",
+        "edited",
+        "revoiced"
+      ],
+      "title": "Origin",
+      "type": "string"
+    },
+    "instruction": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Instruction"
+    },
+    "turns": {
+      "items": {
+        "$ref": "#/$defs/Turn"
+      },
+      "title": "Turns",
+      "type": "array"
+    },
+    "check": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CheckReport"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "audio_file": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Audio File"
+    },
+    "duration": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Duration"
+    },
+    "turn_times": {
+      "items": {
+        "items": {
+          "type": "number"
+        },
+        "type": "array"
+      },
+      "title": "Turn Times",
+      "type": "array"
+    }
+  },
+  "required": [
+    "version"
+  ],
+  "title": "SegmentVersion",
+  "type": "object"
+}

@@ -1,0 +1,1231 @@
+{
+  "$defs": {
+    "ChapterMark": {
+      "description": "A chapter marker in the final audio: segment title and start time in seconds.",
+      "properties": {
+        "index": {
+          "title": "Index",
+          "type": "integer"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "start": {
+          "title": "Start",
+          "type": "number"
+        }
+      },
+      "required": [
+        "index",
+        "title",
+        "start"
+      ],
+      "title": "ChapterMark",
+      "type": "object"
+    },
+    "CheckReport": {
+      "description": "Result of checking one segment: verdict, issues, missing key points and whether it still needs a human look after\nthe repair attempts.",
+      "properties": {
+        "verdict": {
+          "default": "unchecked",
+          "enum": [
+            "pass",
+            "revise",
+            "unchecked"
+          ],
+          "title": "Verdict",
+          "type": "string"
+        },
+        "issues": {
+          "items": {
+            "$ref": "#/$defs/Issue"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "missing_points": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing Points",
+          "type": "array"
+        },
+        "notes": {
+          "default": "",
+          "title": "Notes",
+          "type": "string"
+        },
+        "attempts": {
+          "default": 1,
+          "title": "Attempts",
+          "type": "integer"
+        },
+        "needs_review": {
+          "default": false,
+          "title": "Needs Review",
+          "type": "boolean"
+        }
+      },
+      "title": "CheckReport",
+      "type": "object"
+    },
+    "Figure": {
+      "description": "A picture found in the chapter PDF (shown in the video with its original caption, never re-captioned).",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "page": {
+          "title": "Page",
+          "type": "integer"
+        },
+        "file": {
+          "title": "File",
+          "type": "string"
+        },
+        "width": {
+          "default": 0,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "default": 0,
+          "title": "Height",
+          "type": "integer"
+        },
+        "caption": {
+          "default": "",
+          "title": "Caption",
+          "type": "string"
+        },
+        "near_text": {
+          "default": "",
+          "title": "Near Text",
+          "type": "string"
+        },
+        "unit_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit Id"
+        }
+      },
+      "required": [
+        "id",
+        "page",
+        "file"
+      ],
+      "title": "Figure",
+      "type": "object"
+    },
+    "FinalAudio": {
+      "description": "The finished episode: WAV, MP3, transcripts, subtitles, duration, chapter marks and whether it is out of date.",
+      "properties": {
+        "wav": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wav"
+        },
+        "mp3": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mp3"
+        },
+        "transcript_md": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Transcript Md"
+        },
+        "srt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Srt"
+        },
+        "vtt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Vtt"
+        },
+        "duration": {
+          "default": 0.0,
+          "title": "Duration",
+          "type": "number"
+        },
+        "chapters": {
+          "items": {
+            "$ref": "#/$defs/ChapterMark"
+          },
+          "title": "Chapters",
+          "type": "array"
+        },
+        "built_at": {
+          "default": "",
+          "title": "Built At",
+          "type": "string"
+        },
+        "stale": {
+          "default": false,
+          "title": "Stale",
+          "type": "boolean"
+        }
+      },
+      "title": "FinalAudio",
+      "type": "object"
+    },
+    "FinalVideo": {
+      "description": "The finished video: MP4, poster image, size, duration and whether it is out of date.",
+      "properties": {
+        "mp4": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mp4"
+        },
+        "poster": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Poster"
+        },
+        "duration": {
+          "default": 0.0,
+          "title": "Duration",
+          "type": "number"
+        },
+        "width": {
+          "default": 0,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "default": 0,
+          "title": "Height",
+          "type": "integer"
+        },
+        "frames": {
+          "default": 0,
+          "title": "Frames",
+          "type": "integer"
+        },
+        "built_at": {
+          "default": "",
+          "title": "Built At",
+          "type": "string"
+        },
+        "audio_built_at": {
+          "default": "",
+          "title": "Audio Built At",
+          "type": "string"
+        },
+        "stale": {
+          "default": false,
+          "title": "Stale",
+          "type": "boolean"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "title": "FinalVideo",
+      "type": "object"
+    },
+    "HostCfg": {
+      "description": "One host: display name, voice and the grammatical gender implied by the voice.",
+      "properties": {
+        "name": {
+          "maxLength": 40,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "voice": {
+          "title": "Voice",
+          "type": "string"
+        },
+        "gender": {
+          "default": "female",
+          "enum": [
+            "female",
+            "male"
+          ],
+          "title": "Gender",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "voice"
+      ],
+      "title": "HostCfg",
+      "type": "object"
+    },
+    "Issue": {
+      "description": "One problem found by a check, with its severity, the line it concerns and a suggested fix.",
+      "properties": {
+        "turn": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Turn"
+        },
+        "severity": {
+          "default": "minor",
+          "enum": [
+            "major",
+            "minor"
+          ],
+          "title": "Severity",
+          "type": "string"
+        },
+        "type": {
+          "default": "other",
+          "title": "Type",
+          "type": "string"
+        },
+        "detail": {
+          "default": "",
+          "title": "Detail",
+          "type": "string"
+        },
+        "evidence_unit": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Unit"
+        },
+        "suggested_fix": {
+          "default": "",
+          "title": "Suggested Fix",
+          "type": "string"
+        },
+        "source": {
+          "default": "llm",
+          "enum": [
+            "llm",
+            "rule"
+          ],
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "title": "Issue",
+      "type": "object"
+    },
+    "PlanInfo": {
+      "description": "The episode plan: title, opening hook and target length.",
+      "properties": {
+        "episode_title": {
+          "default": "",
+          "title": "Episode Title",
+          "type": "string"
+        },
+        "hook": {
+          "default": "",
+          "title": "Hook",
+          "type": "string"
+        },
+        "target_minutes": {
+          "default": 0.0,
+          "title": "Target Minutes",
+          "type": "number"
+        },
+        "total_words": {
+          "default": 0,
+          "title": "Total Words",
+          "type": "integer"
+        }
+      },
+      "title": "PlanInfo",
+      "type": "object"
+    },
+    "ProjectSettings": {
+      "description": "Everything chosen when an episode is created: language, writing mode, length, hosts, fact-check on or off,\ndelivery styles, and optional instructions. Out-of-range values are clamped.",
+      "properties": {
+        "language": {
+          "default": "en",
+          "title": "Language",
+          "type": "string"
+        },
+        "writing_mode": {
+          "default": "direct",
+          "enum": [
+            "direct",
+            "translate"
+          ],
+          "title": "Writing Mode",
+          "type": "string"
+        },
+        "polish_translation": {
+          "default": false,
+          "title": "Polish Translation",
+          "type": "boolean"
+        },
+        "audience": {
+          "default": "school students (Classes 6-12)",
+          "title": "Audience",
+          "type": "string"
+        },
+        "minutes": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Minutes"
+        },
+        "show_name": {
+          "default": "Chapter Chat",
+          "title": "Show Name",
+          "type": "string"
+        },
+        "host_a": {
+          "$ref": "#/$defs/HostCfg"
+        },
+        "host_b": {
+          "$ref": "#/$defs/HostCfg"
+        },
+        "fact_check": {
+          "default": true,
+          "title": "Fact Check",
+          "type": "boolean"
+        },
+        "max_revisions": {
+          "default": 2,
+          "title": "Max Revisions",
+          "type": "integer"
+        },
+        "allowed_styles": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Styles",
+          "type": "array"
+        },
+        "jingle": {
+          "default": true,
+          "title": "Jingle",
+          "type": "boolean"
+        },
+        "auto_voice": {
+          "default": true,
+          "title": "Auto Voice",
+          "type": "boolean"
+        },
+        "make_video": {
+          "default": false,
+          "title": "Make Video",
+          "type": "boolean"
+        },
+        "extra_instructions": {
+          "default": "",
+          "title": "Extra Instructions",
+          "type": "string"
+        },
+        "writer_model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Writer Model"
+        },
+        "checker_model": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checker Model"
+        },
+        "tts_max_words": {
+          "default": 40,
+          "title": "Tts Max Words",
+          "type": "integer"
+        }
+      },
+      "title": "ProjectSettings",
+      "type": "object"
+    },
+    "Scene": {
+      "description": "One slide of the video: a layout, its text, which script lines it is on screen for, and when each item appears.",
+      "properties": {
+        "layout": {
+          "default": "bullets",
+          "enum": [
+            "title",
+            "bullets",
+            "steps",
+            "cycle",
+            "definition",
+            "compare",
+            "figure",
+            "keyfact",
+            "recap"
+          ],
+          "title": "Layout",
+          "type": "string"
+        },
+        "title": {
+          "default": "",
+          "title": "Title",
+          "type": "string"
+        },
+        "items": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "term": {
+          "default": "",
+          "title": "Term",
+          "type": "string"
+        },
+        "text": {
+          "default": "",
+          "title": "Text",
+          "type": "string"
+        },
+        "columns": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Columns",
+          "type": "array"
+        },
+        "rows": {
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Rows",
+          "type": "array"
+        },
+        "figure": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Figure"
+        },
+        "from_turn": {
+          "default": 0,
+          "title": "From Turn",
+          "type": "integer"
+        },
+        "to_turn": {
+          "default": 0,
+          "title": "To Turn",
+          "type": "integer"
+        },
+        "reveal": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Reveal",
+          "type": "array"
+        }
+      },
+      "title": "Scene",
+      "type": "object"
+    },
+    "Segment": {
+      "description": "One part of the episode (intro, body, recap or outro): its plan, the chapter paragraphs it covers, and every saved\nversion.",
+      "properties": {
+        "index": {
+          "title": "Index",
+          "type": "integer"
+        },
+        "kind": {
+          "default": "body",
+          "enum": [
+            "intro",
+            "body",
+            "recap",
+            "outro"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "goal": {
+          "default": "",
+          "title": "Goal",
+          "type": "string"
+        },
+        "key_points": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Key Points",
+          "type": "array"
+        },
+        "unit_ids": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Unit Ids",
+          "type": "array"
+        },
+        "target_words": {
+          "default": 150,
+          "title": "Target Words",
+          "type": "integer"
+        },
+        "status": {
+          "default": "pending",
+          "enum": [
+            "pending",
+            "writing",
+            "written",
+            "voicing",
+            "ready",
+            "error"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error"
+        },
+        "versions": {
+          "items": {
+            "$ref": "#/$defs/SegmentVersion"
+          },
+          "title": "Versions",
+          "type": "array"
+        },
+        "current": {
+          "default": 0,
+          "title": "Current",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "index",
+        "title"
+      ],
+      "title": "Segment",
+      "type": "object"
+    },
+    "SegmentStoryboard": {
+      "description": "The slides planned for one segment, and any problems the checks found in them.",
+      "properties": {
+        "index": {
+          "title": "Index",
+          "type": "integer"
+        },
+        "version": {
+          "title": "Version",
+          "type": "integer"
+        },
+        "scenes": {
+          "items": {
+            "$ref": "#/$defs/Scene"
+          },
+          "title": "Scenes",
+          "type": "array"
+        },
+        "source": {
+          "default": "llm",
+          "enum": [
+            "llm",
+            "fallback",
+            "mock"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "instruction": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Instruction"
+        },
+        "issues": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "index",
+        "version"
+      ],
+      "title": "SegmentStoryboard",
+      "type": "object"
+    },
+    "SegmentVersion": {
+      "description": "One saved version of a segment (generated, rewritten, edited or re-voiced) with its lines, check result and audio.",
+      "properties": {
+        "version": {
+          "title": "Version",
+          "type": "integer"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "origin": {
+          "default": "generated",
+          "enum": [
+            "generated",
+            "rewrite",
+            "edited",
+            "revoiced"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "instruction": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Instruction"
+        },
+        "turns": {
+          "items": {
+            "$ref": "#/$defs/Turn"
+          },
+          "title": "Turns",
+          "type": "array"
+        },
+        "check": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CheckReport"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "audio_file": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Audio File"
+        },
+        "duration": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration"
+        },
+        "turn_times": {
+          "items": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "title": "Turn Times",
+          "type": "array"
+        }
+      },
+      "required": [
+        "version"
+      ],
+      "title": "SegmentVersion",
+      "type": "object"
+    },
+    "SourceInfo": {
+      "description": "Facts about the uploaded chapter: size, pages, whether OCR was needed, detected script and any warnings.",
+      "properties": {
+        "filename": {
+          "default": "",
+          "title": "Filename",
+          "type": "string"
+        },
+        "pages": {
+          "default": 0,
+          "title": "Pages",
+          "type": "integer"
+        },
+        "chars": {
+          "default": 0,
+          "title": "Chars",
+          "type": "integer"
+        },
+        "words": {
+          "default": 0,
+          "title": "Words",
+          "type": "integer"
+        },
+        "unit_count": {
+          "default": 0,
+          "title": "Unit Count",
+          "type": "integer"
+        },
+        "ocr_used": {
+          "default": false,
+          "title": "Ocr Used",
+          "type": "boolean"
+        },
+        "script_guess": {
+          "default": "",
+          "title": "Script Guess",
+          "type": "string"
+        },
+        "title_guess": {
+          "default": "",
+          "title": "Title Guess",
+          "type": "string"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "title": "SourceInfo",
+      "type": "object"
+    },
+    "Turn": {
+      "description": "One spoken line: who speaks, the text, an optional English master (translate mode), a delivery style and whether\nit is a short reaction.",
+      "properties": {
+        "speaker": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Speaker",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "text_en": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Text En"
+        },
+        "style": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Style"
+        },
+        "reaction": {
+          "default": false,
+          "title": "Reaction",
+          "type": "boolean"
+        },
+        "take": {
+          "default": 0,
+          "title": "Take",
+          "type": "integer"
+        },
+        "edited": {
+          "default": false,
+          "title": "Edited",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "speaker",
+        "text"
+      ],
+      "title": "Turn",
+      "type": "object"
+    },
+    "UsageTotals": {
+      "description": "Counts of what an episode used: model calls, tokens, cost, voice requests and characters, cache hits, translation\ncalls.",
+      "properties": {
+        "llm_calls": {
+          "default": 0,
+          "title": "Llm Calls",
+          "type": "integer"
+        },
+        "llm_prompt_tokens": {
+          "default": 0,
+          "title": "Llm Prompt Tokens",
+          "type": "integer"
+        },
+        "llm_completion_tokens": {
+          "default": 0,
+          "title": "Llm Completion Tokens",
+          "type": "integer"
+        },
+        "llm_cost_usd": {
+          "default": 0.0,
+          "title": "Llm Cost Usd",
+          "type": "number"
+        },
+        "tts_calls": {
+          "default": 0,
+          "title": "Tts Calls",
+          "type": "integer"
+        },
+        "tts_chars": {
+          "default": 0,
+          "title": "Tts Chars",
+          "type": "integer"
+        },
+        "tts_cache_hits": {
+          "default": 0,
+          "title": "Tts Cache Hits",
+          "type": "integer"
+        },
+        "mt_calls": {
+          "default": 0,
+          "title": "Mt Calls",
+          "type": "integer"
+        },
+        "mt_chars": {
+          "default": 0,
+          "title": "Mt Chars",
+          "type": "integer"
+        }
+      },
+      "title": "UsageTotals",
+      "type": "object"
+    },
+    "VideoCfg": {
+      "description": "Video options: resolution, frame rate, theme, captions, speaker names, chapter figures and cross-fade.",
+      "properties": {
+        "resolution": {
+          "default": "720p",
+          "enum": [
+            "480p",
+            "720p",
+            "1080p"
+          ],
+          "title": "Resolution",
+          "type": "string"
+        },
+        "fps": {
+          "default": 25,
+          "title": "Fps",
+          "type": "integer"
+        },
+        "captions": {
+          "default": true,
+          "title": "Captions",
+          "type": "boolean"
+        },
+        "speakers": {
+          "default": true,
+          "title": "Speakers",
+          "type": "boolean"
+        },
+        "theme": {
+          "default": "classic",
+          "enum": [
+            "classic",
+            "dark",
+            "warm"
+          ],
+          "title": "Theme",
+          "type": "string"
+        },
+        "use_figures": {
+          "default": true,
+          "title": "Use Figures",
+          "type": "boolean"
+        },
+        "crossfade": {
+          "default": 0.35,
+          "title": "Crossfade",
+          "type": "number"
+        }
+      },
+      "title": "VideoCfg",
+      "type": "object"
+    },
+    "VideoState": {
+      "description": "Everything about an episode's video: options, status, storyboards, figures from the PDF and the final file.",
+      "properties": {
+        "cfg": {
+          "$ref": "#/$defs/VideoCfg"
+        },
+        "status": {
+          "default": "none",
+          "enum": [
+            "none",
+            "directing",
+            "rendering",
+            "ready",
+            "error"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "message": {
+          "default": "",
+          "title": "Message",
+          "type": "string"
+        },
+        "storyboards": {
+          "items": {
+            "$ref": "#/$defs/SegmentStoryboard"
+          },
+          "title": "Storyboards",
+          "type": "array"
+        },
+        "figures": {
+          "items": {
+            "$ref": "#/$defs/Figure"
+          },
+          "title": "Figures",
+          "type": "array"
+        },
+        "figures_done": {
+          "default": false,
+          "title": "Figures Done",
+          "type": "boolean"
+        },
+        "final": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/FinalVideo"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "VideoState",
+      "type": "object"
+    }
+  },
+  "description": "One episode on disk: settings, source info, plan, segments, final audio, video, usage and a log.",
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    },
+    "updated_at": {
+      "title": "Updated At",
+      "type": "string"
+    },
+    "status": {
+      "default": "created",
+      "enum": [
+        "created",
+        "ingesting",
+        "planning",
+        "writing",
+        "script_ready",
+        "voicing",
+        "assembling",
+        "ready",
+        "error",
+        "interrupted"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "message": {
+      "default": "",
+      "title": "Message",
+      "type": "string"
+    },
+    "settings": {
+      "$ref": "#/$defs/ProjectSettings"
+    },
+    "source": {
+      "$ref": "#/$defs/SourceInfo"
+    },
+    "plan": {
+      "$ref": "#/$defs/PlanInfo"
+    },
+    "segments": {
+      "items": {
+        "$ref": "#/$defs/Segment"
+      },
+      "title": "Segments",
+      "type": "array"
+    },
+    "final": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/FinalAudio"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "video": {
+      "$ref": "#/$defs/VideoState"
+    },
+    "usage": {
+      "$ref": "#/$defs/UsageTotals"
+    },
+    "log": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Log",
+      "type": "array"
+    }
+  },
+  "required": [
+    "id",
+    "title"
+  ],
+  "title": "Project",
+  "type": "object"
+}

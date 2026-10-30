@@ -1,0 +1,233 @@
+"""Regenerate the machine-made parts of the documentation from the code, so they cannot go out of date.
+
+    python scripts/export_docs.py
+
+Writes (in docs/):
+  * schemas/<Model>.schema.json  JSON Schema of the main data models (from the pydantic models)
+  * openapi.json                 the REST API description (from the FastAPI app)
+  * API.md                       the same API as a readable table
+  * DATA_MODEL.md                class diagram (Mermaid), on-disk layout, and a real example from a demo-mode run
+
+It runs entirely offline (demo mode); no keys are needed.
+"""
+from __future__ import annotations
+
+import json
+import sys
+import tempfile
+import time
+import types
+import typing
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
+from fastapi.testclient import TestClient  # noqa: E402
+from pydantic import BaseModel  # noqa: E402
+
+from podcast_studio import models as M  # noqa: E402
+from podcast_studio.api import create_app  # noqa: E402
+from podcast_studio.config import Settings  # noqa: E402
+
+DOCS = ROOT / "docs"
+SCHEMA_MODELS = [M.Project, M.ProjectSettings, M.Segment, M.SegmentVersion, M.Turn, M.CheckReport, M.SegmentStoryboard, M.SourceUnit]
+DIAGRAM_ROOTS = [M.Project, M.SourceUnit]
+
+
+# ----------------------------------------------------------------------------- class diagram (Mermaid)
+def _unwrap(tp):
+    """Strip Optional/Union-with-None and return (inner type, is_optional)."""
+    origin = typing.get_origin(tp)
+    if origin in (typing.Union, types.UnionType):
+        args = [a for a in typing.get_args(tp) if a is not type(None)]
+        if len(args) == 1:
+            return args[0], True
+    return tp, False
+
+
+def _type_name(tp) -> str:
+    tp, opt = _unwrap(tp)
+    origin, args = typing.get_origin(tp), typing.get_args(tp)
+    if origin is typing.Literal:
+        name = "enum"
+    elif origin in (list, set):
+        name = f"list~{_type_name(args[0])}~" if args else "list"
+    elif origin is dict:
+        name = "dict"
+    elif isinstance(tp, type):
+        name = {"str": "string"}.get(tp.__name__, tp.__name__)
+    else:
+        name = "any"
+    return name + ("?" if opt else "")
+
+
+def _models_in(tp) -> list[type[BaseModel]]:
+    """Every pydantic model class mentioned in a type annotation."""
+    tp, _ = _unwrap(tp)
+    if isinstance(tp, type) and issubclass(tp, BaseModel):
+        return [tp]
+    found: list[type[BaseModel]] = []
+    for a in typing.get_args(tp):
+        found += _models_in(a)
+    return found
+
+
+def class_diagram() -> str:
+    seen: dict[str, type[BaseModel]] = {}
+    edges: list[tuple[str, str, str]] = []
+
+    def visit(cls: type[BaseModel]) -> None:
+        if cls.__name__ in seen:
+            return
+        seen[cls.__name__] = cls
+        for fname, field in cls.model_fields.items():
+            for target in _models_in(field.annotation):
+                edges.append((cls.__name__, target.__name__, fname))
+                visit(target)
+
+    for root in DIAGRAM_ROOTS:
+        visit(root)
+    lines = ["classDiagram"]
+    for name, cls in seen.items():
+        lines.append(f"    class {name} {{")
+        for fname, field in cls.model_fields.items():
+            lines.append(f"        +{_type_name(field.annotation)} {fname}")
+        lines.append("    }")
+    for a, b, f in edges:
+        lines.append(f"    {a} *-- {b} : {f}")
+    lines.append("    Segment ..> SourceUnit : unit_ids")
+    return "\n".join(lines)
+
+
+# ----------------------------------------------------------------------------- API reference
+GROUPS = [
+    ("Meta, setup and tuning", ("/api/health", "/api/config", "/api/doctor", "/api/preview", "/api/setup", "/api/tuning", "/api/extras")),
+    ("Projects (episodes)", ("/api/projects",)),
+    ("Jobs", ("/api/jobs",)),
+]
+
+
+def _group_of(path: str, method: str) -> str:
+    if "/segments/" in path and "/video/" not in path:
+        return "Segments (redo, edit, history)"
+    if "/video" in path:
+        return "Video"
+    if any(s in path for s in ("/learn", "/ask", "/insights")):
+        return "Study pack, Ask the hosts, Quality"
+    if path.endswith(("/voice", "/remix", "/assemble", "/resume", "/validate")):
+        return "Episode actions"
+    for name, prefixes in GROUPS:
+        if path.startswith(prefixes):
+            return name
+    return "Other"
+
+
+def api_markdown(spec: dict) -> str:
+    rows: dict[str, list[tuple[str, str, str]]] = {}
+    for path, ops in spec["paths"].items():
+        for method, op in ops.items():
+            text = (op.get("description") or op.get("summary") or "").strip().split("\n\n")[0].replace("\n", " ")
+            rows.setdefault(_group_of(path, method), []).append((method.upper(), path, text))
+    order = ["Meta, setup and tuning", "Projects (episodes)", "Episode actions", "Segments (redo, edit, history)", "Video",
+             "Study pack, Ask the hosts, Quality", "Jobs", "Other"]
+    out = ["# REST API", "",
+           "Generated by `scripts/export_docs.py` from the running app. With the app running, the interactive version is at "
+           "`/api/docs` (Swagger UI) and the machine-readable one at `/api/openapi.json` (also saved as [`openapi.json`](openapi.json)).", "",
+           "Long operations (generate, re-voice, video...) return a `job` object immediately; poll `GET /api/jobs/{job_id}` for progress. "
+           "A project accepts one job at a time (a second request gets `409`). The server binds to localhost and has no authentication: it is a local tool.", ""]
+    for g in order:
+        if g not in rows:
+            continue
+        out += [f"## {g}", "", "| Method | Path | What it does |", "|---|---|---|"]
+        out += [f"| `{m}` | `{p}` | {t} |" for m, p, t in sorted(rows[g], key=lambda r: (r[1], r[0]))]
+        out.append("")
+    return "\n".join(out)
+
+
+# ----------------------------------------------------------------------------- real example
+def demo_example() -> dict:
+    """Make a tiny episode in demo mode and return a trimmed project.json to show what the data really looks like."""
+    text = (ROOT / "samples" / "water_cycle.txt").read_text(encoding="utf-8")
+    with tempfile.TemporaryDirectory() as tmp:
+        with TestClient(create_app(Settings.from_env(mock=True, data_dir=Path(tmp) / "d"))) as c:
+            r = c.post("/api/projects", data={"text": text, "title": "The Water Cycle", "settings_json": json.dumps({"minutes": 2})})
+            job = r.json()["job"]["id"]
+            for _ in range(300):
+                if c.get(f"/api/jobs/{job}").json()["status"] in {"done", "error", "cancelled"}:
+                    break
+                time.sleep(0.5)
+            pid = r.json()["project"]["id"]
+            p = c.get(f"/api/projects/{pid}").json()["project"]
+            units = json.loads((Path(tmp) / "d" / "projects" / pid / "source" / "units.json").read_text(encoding="utf-8"))
+    seg = p["segments"][1]
+    ver = seg["versions"][0]
+    return {
+        "source_unit": units[1],
+        "segment": {k: seg[k] for k in ("index", "kind", "title", "goal", "key_points", "unit_ids", "target_words", "status", "current")},
+        "version": {**{k: ver[k] for k in ("version", "origin", "duration")}, "turns": ver["turns"][:2], "check": ver["check"],
+                    "audio_file": ver["audio_file"], "turn_times": ver["turn_times"][:2]},
+        "usage": p["usage"],
+    }
+
+
+LAYOUT = """\
+data/                                   (git-ignored; set another folder with DATA_DIR in .env)
+├── projects/
+│   └── <project-id>/                   one folder per episode, e.g. 261030-46efbf
+│       ├── project.json                everything about the episode (the `Project` model above)
+│       ├── source/
+│       │   ├── <your upload>           the PDF or text exactly as uploaded
+│       │   ├── source.txt              cleaned chapter text
+│       │   └── units.json              the numbered source paragraphs (`SourceUnit` list)
+│       ├── segments/segNN_vK.wav       the audio of segment NN, script version K
+│       ├── final/                      podcast.mp3, podcast.wav, transcript.md / .srt / .vtt
+│       ├── reports/validation.json     the last quality report
+│       ├── extras/                     learn.json (study pack), history.json + ask_NNN.wav (Ask the hosts)
+│       └── video/                      episode.mp4, poster.jpg, scenes/ (slide thumbnails), storyboards in project.json
+├── cache/
+│   ├── tts/                            every recorded voice chunk (re-used, so re-mixing costs no voice credits)
+│   ├── frames/                         every drawn video frame
+│   └── pages/                          page images used for OCR of scanned PDFs
+└── (fonts/ next to data/             optional .ttf/.otf files for the video slides)
+"""
+
+
+def data_model_markdown(example: dict) -> str:
+    return "\n".join([
+        "# Data model", "",
+        "Everything an episode needs is one `project.json` plus audio files, so a stopped run can resume and nothing hides in a database. "
+        "The models are [pydantic](https://docs.pydantic.dev) classes in [`podcast_studio/models.py`](../podcast_studio/models.py); "
+        "their JSON Schemas are in [`schemas/`](schemas/). This page is generated by `scripts/export_docs.py`.", "",
+        "## Class diagram", "", "```mermaid", class_diagram(), "```", "",
+        "How to read it: a `Project` has settings, source facts, a plan, a list of **segments**, the final audio and the video state. "
+        "Each segment keeps **every version** of its script (`SegmentVersion`: the lines, their check result, the audio and per-line timings), "
+        "and `current` says which one is in use. That is what makes *Rewrite*, *Re-voice*, *Edit line* and *History* cheap and reversible. "
+        "A segment points at the chapter paragraphs it covers through `unit_ids`; those are the numbered `SourceUnit`s every claim must trace back to.", "",
+        "## On disk", "", "```text", LAYOUT, "```", "",
+        "## A real example", "",
+        "Trimmed from a demo-mode run of `samples/water_cycle.txt` (so the wording is placeholder text, but the structure is exactly what real runs write).", "",
+        "**A source paragraph** (`source/units.json`):", "", "```json", json.dumps(example["source_unit"], indent=2, ensure_ascii=False), "```", "",
+        "**A segment** (in `project.json`):", "", "```json", json.dumps(example["segment"], indent=2, ensure_ascii=False), "```", "",
+        "**One version of that segment**: two of its lines, the fact-check result, its audio and timings:", "", "```json",
+        json.dumps(example["version"], indent=2, ensure_ascii=False), "```", "",
+        "**What the episode cost** (`usage`):", "", "```json", json.dumps(example["usage"], indent=2), "```", "",
+    ])
+
+
+def main() -> None:
+    (DOCS / "schemas").mkdir(parents=True, exist_ok=True)
+    for model in SCHEMA_MODELS:
+        (DOCS / "schemas" / f"{model.__name__}.schema.json").write_text(
+            json.dumps(model.model_json_schema(), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    with tempfile.TemporaryDirectory() as tmp:
+        app = create_app(Settings.from_env(mock=True, data_dir=Path(tmp) / "d"))
+        spec = app.openapi()
+    (DOCS / "openapi.json").write_text(json.dumps(spec, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    (DOCS / "API.md").write_text(api_markdown(spec) + "\n", encoding="utf-8")
+    (DOCS / "DATA_MODEL.md").write_text(data_model_markdown(demo_example()) + "\n", encoding="utf-8")
+    print("wrote docs/schemas/*.json, docs/openapi.json, docs/API.md, docs/DATA_MODEL.md")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,35 @@
+{
+  "description": "One numbered piece of the chapter (heading, paragraph, list or table). Every claim in the episode must trace back\nto these ids.",
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "integer"
+    },
+    "kind": {
+      "default": "para",
+      "enum": [
+        "heading",
+        "para",
+        "list",
+        "table"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    },
+    "section": {
+      "default": "",
+      "title": "Section",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "text"
+  ],
+  "title": "SourceUnit",
+  "type": "object"
+}

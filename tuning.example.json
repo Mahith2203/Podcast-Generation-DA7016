@@ -1,0 +1,18 @@
+{
+  "_note": "Copy to tuning.json. Only keys you want to change are needed; or set \"preset\": \"faithful|lively|calm\". Edit here or via `python -m podcast_studio.cli tune ...` / the Tuning button in the app.",
+  "writer_temperature": 0.85,
+  "planner_temperature": 0.4,
+  "checker_temperature": 0.1,
+  "words_per_minute_scale": 1.0,
+  "gap_same_speaker": 0.22,
+  "gap_speaker_change": 0.34,
+  "gap_after_question": 0.06,
+  "gap_jitter": 0.04,
+  "reaction_overlap": 0.16,
+  "segment_gap": 0.55,
+  "speech_level_db": -18.0,
+  "final_loudness_lufs": -16.0,
+  "jingle_gain": 1.0,
+  "director_temperature": 0.5,
+  "scene_words": 55
+}
